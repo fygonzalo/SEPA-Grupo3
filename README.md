@@ -1,6 +1,6 @@
 # SEPA - Grupo 3
 
-El sistema SEPA es una aplicacion web con un backend en Java y frontend en HTML5, CSS3 y JS, con posible expansion a dispositivos moviles mediante aplicaciones nativas, que permitira a los ciudadanos argentinos visualizar los precios de los supermercados, los cuales seran informados por los mismos diariamente. En caso de que estos precios no sean respetados los ciudadanos podran realizar denuncias a travÈs del sistema, las cuales ser·n informadas al administrador general del sistema.
+El sistema SEPA es una aplicacion web con un backend en Java y frontend en HTML5, CSS3 y JS, con posible expansion a dispositivos moviles mediante aplicaciones nativas, que permitira a los ciudadanos argentinos visualizar los precios de los supermercados, los cuales seran informados por los mismos diariamente. En caso de que estos precios no sean respetados los ciudadanos podran realizar denuncias a trav√©s del sistema, las cuales ser√°n informadas al administrador general del sistema.
 
 ### Integrantes
 - Bernaola, Martin
@@ -26,5 +26,9 @@ Primero se debe copiar el conector JDBC, en este caso de Mysql, a la carpeta 			
 1. En la consola ir a Resources/JavaMail Sessions y crear una nueva bajo el nombre de mail/SEPAEmail.
 2. Para utilizar el correo creado para el desarrollo configurar el mail host: "smtp.gmail.com", default user: "sepagrupo3@gmail.com", default sender address: "sepagrupo3@gmail.com" y agregar 4 parametros adicionales, mail.smtp.ssl.enable: "true", mail.smtp.port: "465", mail.smtp.auth: "true", mail.smtp.password: "sepatrabajo3"
 
-
+### Importante
+Se debe crear una cuenta para el administrador de forma manual.  
+> USE [Database]  
+INSERT INTO usuario (username, password, email) VALUES ("[Usuario]", "[Contrase√±a]", "[Correo]")  
+INSERT INTO rolusuario(username, rol) VALUES ("[Usuario]", "ADMINISTRADOR");
 

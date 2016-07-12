@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <ui:composition template="/templates/commonTemplate.xhtml">
+        <ui:define name="title">
+            COMERCIO - Panel de administracion
+        </ui:define>
+
+        <ui:define name="content">
+            <h:outputStylesheet library="css" name="/comercio/index.css"/>
+
+            <!-- Uso de la plantilla de header -->
+            <ui:decorate template="/templates/commonHeader.xhtml">
+                <ui:define name="commonHeaderContent">
+                    <div class="row">
+
+                        <!-- Contenido del header -->
+                        <div class="col-xs-10">
+                            <h4>CUIT: #{comercioBean.comercio.cuit}</h4>
+                            <h4>Nombre societario: #{comercioBean.comercio.nombre}</h4>
+                        </div>
+                        <div class="col-xs-2">
+                            <h:link class="btn btn-success btn-block" value="Editar" p:href="#editarComercio"
+                                    p:data-toggle="modal"/>
+                        </div>
+                        <!-- Fin de contenido del header -->
+
+                    </div>
+                </ui:define>
+            </ui:decorate>
+            <!-- Fin de uso de la plantilla de header -->
+
+            <!-- Uso de la plantilla de container -->
+            <ui:decorate template="/templates/commonContainer.xhtml">
+                <ui:define name="commonContainerContent">
+
+                    <!-- Contenido del container -->
+                    <h:panelGroup rendered="#{!comercioBean.comercio.habilitado}">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class=" alert alert-danger text-center">
+                                    Este comercio se encuentra deshabilitado, se pueden agregar sucursales y editar la informacion
+                                    del comercio. Ninguna de las sucursales pertenecientes a este comercio seran visibles para los
+                                    usuarios. Para habilitarlo pongase en contacto con el administrador del sistema.
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                    <div class="row">
+
+                        <!-- Menu izquierdo -->
+                        <div class="col-md-3">
+                            <div class="row">
+
+                                <!-- Menu de filtro -->
+                                <div class="col-xs-12">
+                                    <h:form id="formFiltro">
+
+                                        <div class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Filtros
+                                            </div>
+
+                                            <!-- List group -->
+                                            <ul class="list-group">
+                                                <li class="list-group-item">
+                                                    <h:selectOneMenu id="selectProvincia" class="form-control input-sm"
+                                                                     value="#{listaSucursalesBean.provincia}"
+                                                                     converter="#{provinciaConverter}">
+                                                        <f:selectItem itemValue="#{null}"
+                                                                      itemLabel="Todas las provincias"
+                                                                      noSelectionOption="true"/>
+                                                        <f:selectItems value="#{listaSucursalesBean.provinciaList}"
+                                                                       var="p"
+                                                                       itemLabel="#{p.nombre}"
+                                                                       itemValue="#{p}"/>
+                                                        <f:ajax listener="#{listaSucursalesBean.listarCiudades}"
+                                                                render="selectCiudad"/>
+                                                    </h:selectOneMenu>
+                                                    <h:selectOneMenu id="selectCiudad" class="form-control input-sm"
+                                                                     value="#{listaSucursalesBean.ciudad}"
+                                                                     converter="#{ciudadConverter}">
+                                                        <f:selectItem itemLabel="Todas las ciudades"
+                                                                      itemValue="#{null}"/>
+                                                        <f:selectItems value="#{listaSucursalesBean.ciudadList}"
+                                                                       var="c"
+                                                                       itemLabel="#{c.nombre}"
+                                                                       itemValue="#{c}"/>
+                                                    </h:selectOneMenu>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <h:inputText id="inputDireccion" p:placeholder="Direccion"
+                                                                 class="form-control input-sm"
+                                                                 value="#{listaSucursalesBean.direccion}"/>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <h:commandButton class="btn btn-primary btn-block btn-sm"
+                                                                     value="Actualizar"
+                                                                     action="#{listaSucursalesBean.filtrarSucursales}">
+                                                        <f:ajax execute="@form"
+                                                                render=":repeatSucursal :formAccesoSucursalDatos"/>
+                                                    </h:commandButton>
+                                                </li>
+
+                                            </ul>
+
+
+                                        </div>
+                                    </h:form>
+
+                                </div>
+
+                                <!-- Agregar sucursal -->
+                                <div class="col-xs-12">
+                                    <h:form>
+                                        <div class="panel panel-success">
+                                            <div class="panel-body">
+                                                <h:link class="btn btn-success btn-block btn-sm"
+                                                        value="Nueva sucursal"
+                                                        p:data-toggle="modal" p:href="#nuevaSucursal"/>
+                                            </div>
+                                        </div>
+                                    </h:form>
+                                </div>
+
+                                <!-- Deshabilitar comercio -->
+                                <div class="col-xs-12">
+                                    <h:form>
+                                        <div class="panel panel-danger">
+                                            <div class="panel-body">
+                                                <h:link p:data-toggle="modal" p:href="#modalDeshabilitarComercio"
+                                                          class="btn btn-danger btn-block btn-sm" value="Deshabilitar"
+                                                          disabled="#{!comercioBean.comercio.habilitado}"/>
+                                            </div>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin menu izquierdo -->
+
+                        <!-- Listado sucursales -->
+                        <div class="col-md-9">
+                            <h:panelGroup id="repeatSucursal">
+                                <h:form>
+                                    <ui:repeat value="#{listaSucursalesBean.sucursalList}" var="s">
+                                        <div class="panel panel-default"
+                                             style="#{!s.habilitado ? 'background-color: #ffd0d0; border: 1px solid #d43f3a;' : ''}">
+                                            <div class="panel-body">
+                                                <div class="row sucursalContainer">
+                                                    <div class="col-sm-6">
+                                                        <h4>Dirección: #{s.direccion}</h4>
+                                                        <h5>
+                                                            Telefono: #{s.telefono}<br/>
+                                                            Email: #{s.email}<br/>
+                                                            Ciudad: #{s.ciudad.nombre}<br/>
+                                                            Provincia: #{s.provincia.nombre}<br/>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <h:link class="btn btn-block btn-primary btn-sm"
+                                                                value="Historial de precios"/>
+
+                                                        <h:commandButton class="btn btn-block btn-success btn-sm"
+                                                                         value="Acceso"
+                                                                         style="margin-top: 5px;"
+                                                        >
+                                                            <f:ajax render=":formAccesoSucursalDatos" execute="@form"/>
+                                                            <f:setPropertyActionListener
+                                                                    value="#{s}"
+                                                                    target="#{gestionarSucursalBean.sucursal}"/>
+                                                        </h:commandButton>
+
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <h:button class="btn btn-block btn-success btn-sm media-middle"
+                                                                  value="Google maps"/>
+
+                                                        <h:commandButton
+                                                                style="margin-top: 5px;"
+                                                                class="btn btn-block btn-danger btn-sm media-middle"
+                                                                disabled="#{!s.habilitado}"
+                                                                value="Bloquear"/>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </ui:repeat>
+                                </h:form>
+                            </h:panelGroup>
+                        </div>
+                        <!-- Fin listado de sucursales -->
+
+                    </div>
+                    <!-- Fin de contenido del container -->
+
+                </ui:define>
+            </ui:decorate>
+            <!-- Fin de uso de la plantilla container -->
+
+            <!-- Editar sucursal -->
+
+            <!-- Modal acceso sucursal -->
+
+            <div class="modal fade" id="modalAccesoSucursal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title">Acceso sucursal</h3>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h:form id="formAccesoSucursalDatos" class="form-horizontal">
+                                        <div class="form-group">
+                                            <h:outputLabel value="Usuario" for="inputUsername"
+                                                           class="control-label col-sm-3"/>
+                                            <div class="col-sm-9">
+                                                <h:inputText id="inputUsername"
+                                                             value="#{gestionarSucursalBean.sucursal.usuario.username}"
+                                                             disabled="true"
+                                                             class="form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <h:outputLabel value="Email" for="inputEmail"
+                                                           class="control-label col-sm-3"/>
+                                            <div class="col-sm-9">
+                                                <h:inputText id="inputEmail"
+                                                             value="#{gestionarSucursalBean.sucursal.email}"
+                                                             class="form-control"/>
+                                                <h:message for="inputEmail" class="text-danger"/>
+                                            </div>
+                                        </div>
+                                        <h:commandButton value="Guardar"
+                                                         class="btn btn-default btn-block btn-primary"/>
+                                    </h:form>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h:button class="btn btn-default btn-block btn-primary"
+                                              value="Regenerar contrasenia"/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal bloquear comercio -->
+            <div class="modal fade" id="modalDeshabilitarComercio" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Deshabilitar comercio</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Si bloqueas el comercio, las sucursales dejaran de aparecer a los usuarios. Tendras que solicitar el desbloqueo al administrador del sistema a travéz de un email.</h4>
+                            <h:form id="formDeshabilitarComercio">
+                                <h:commandButton class="btn btn-default btn-block btn-danger" value="DESHABILITAR"
+                                                 action="#{comercioBean.bloquearComercio}">
+                                    <f:ajax execute="@form" render="@all"/>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin modal bloquear comercio -->
+
+            <!-- Fin modal acceso sucursal -->
+            <!-- Fin editar sucursal -->
+
+            <!-- Editar comercio -->
+            <!-- Extra editar comercio -->
+            <h:panelGroup id="scriptEditarComercio" rendered="#{facesContext.maximumSeverity == null}">
+                <script type="text/javascript">
+                    $('#editarComercio').modal('hide');
+                </script>
+            </h:panelGroup>
+            <!-- Fin extra editar comercio -->
+
+            <!-- Modal editar comercio -->
+            <div class="modal fade" id="editarComercio" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title">Editar comercio</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h:form id="formEditarComercio" class="form-horizontal">
+                                <div class="form-group">
+                                    <h:outputLabel for="inputCuit" value="CUIT:" class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputCuit"
+                                                     value="#{comercioBean.comercio.cuit}"
+                                                     disabled="true">
+                                            <f:validateBean disabled="false"/>
+                                        </h:inputText>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputNombreSoc" value="Nombre:" class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputNombreSoc"
+                                                     value="#{comercioBean.comercio.nombre}"
+                                                     disabled="true">
+                                            <f:validateBean disabled="false"/>
+                                        </h:inputText>
+                                        <h:message for="inputNombreSoc" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputEmail" value="Email:" class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputEmail"
+                                                     value="#{comercioBean.comercio.email}">
+                                            <f:validateBean disabled="false"/>
+                                        </h:inputText>
+                                        <h:message for="inputEmail" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputTelefono" value="Telefono:"
+                                                   class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputTelefono"
+                                                     value="#{comercioBean.comercio.telefono}">
+                                            <f:validateBean disabled="false"/>
+                                        </h:inputText>
+                                        <h:message for="inputTelefono" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputProvincia" value="Provincia:"
+                                                   class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputProvincia"
+                                                     value="#{comercioBean.ubicacion.provincia}">
+                                        </h:inputText>
+                                        <h:message for="inputProvincia" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputCiudad" value="Ciudad:" class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputCiudad"
+                                                     value="#{comercioBean.ubicacion.ciudad}">
+                                        </h:inputText>
+                                        <h:message for="inputCiudad" class="text-danger"/>
+                                    </div>
+
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputDireccion" value="Direccion:"
+                                                   class="control-label col-sm-2"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputDireccion"
+                                                     value="#{comercioBean.ubicacion.direccion}">
+                                        </h:inputText>
+                                        <h:message for="inputDireccion" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <h:commandButton class="btn btn-default btn-block btn-primary" value="Enviar"
+                                                 action="#{comercioBean.editarComercio}">
+                                    <f:ajax execute="@form" render="@form :scriptEditarComercio"/>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin modal editar comercio -->
+            <!-- Fin editar comercio -->
+
+            <!-- Nueva sucursal -->
+            <!-- Extra nueva sucursal -->
+            <h:panelGroup id="scriptNuevaSucursal" rendered="#{facesContext.maximumSeverity == null}">
+                <script type="text/javascript">
+                    $('#nuevaSucursal').modal('hide');
+                </script>
+            </h:panelGroup>
+            <!-- Fin extra nueva sucursal -->
+
+            <!-- Modal nueva sucursal -->
+            <div class="modal fade" id="nuevaSucursal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Agregar sucursal</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h:form id="formRegistrarSucursal" class="form-horizontal">
+                                <div class="form-group">
+                                    <h:outputLabel for="inputTelefono" class="col-sm-2 control-label"
+                                                   value="Telefono: "/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputTelefono"
+                                                     p:placeHolder="Telefono"
+                                                     value="#{registrarSucursalBean.sucursal.telefono}"/>
+                                        <h:message for="inputTelefono" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputEmail" class="col-sm-2 control-label"
+                                                   value="Email: "/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputEmail"
+                                                     p:placeHolder="Email"
+                                                     value="#{registrarSucursalBean.sucursal.email}"/>
+                                        <h:message for="inputEmail" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputProvincia" class="col-sm-2 control-label"
+                                                   value="Provincia"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputProvincia"
+                                                     p:placeHolder="Provincia"
+                                                     value="#{registrarSucursalBean.ubicacion.provincia}"/>
+                                        <h:message for="inputProvincia" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputCiudad" class="col-sm-2 control-label" value="Ciudad"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputCiudad"
+                                                     p:placeHolder="Ciudad"
+                                                     value="#{registrarSucursalBean.ubicacion.ciudad}"/>
+                                        <h:message for="inputCiudad" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <p/>
+                                <div class="form-group">
+                                    <h:outputLabel for="inputDireccion" class="col-sm-2 control-label"
+                                                   value="Direccion"/>
+                                    <div class="col-sm-10">
+                                        <h:inputText class="form-control" id="inputDireccion"
+                                                     p:placeHolder="Direccion"
+                                                     value="#{registrarSucursalBean.ubicacion.direccion}"/>
+                                        <h:message for="inputDireccion" class="text-danger"/>
+                                    </div>
+                                </div>
+                                <h:commandButton class="btn btn-default btn-block btn-primary" value="Agregar"
+                                                 action="#{registrarSucursalBean.registrarSucursal}">
+                                    <f:ajax execute="@form" render="@form :repeatSucursal :scriptNuevaSucursal"/>
+                                </h:commandButton>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Fin modal nueva sucursal -->
+            <!-- Fin nueva sucursal -->
+
+            <!-- Fin codigo extra -->
+        </ui:define>
+
+
+    </ui:composition>
+</f:view>
+</html>

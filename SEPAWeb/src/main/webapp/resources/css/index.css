@@ -1,0 +1,23 @@
+.indexContent {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    color: #FFFFFF;
+}
+
+.jumbotronBuscarSucursales {
+    display: flex;
+    background: url(#{resource['images/background1.jpg']}) no-repeat center center;
+    margin-bottom: 0;
+    flex-grow: 1;
+    align-items: center;
+
+}
+
+.formBuscarSucursal {
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid #285f8f;
+    padding: 25px 15px;
+}
+

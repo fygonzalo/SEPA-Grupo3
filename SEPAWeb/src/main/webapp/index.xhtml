@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<f:view>
+    <h:body>
+        <ui:composition template="/templates/commonTemplate.xhtml">
+
+            <ui:define name="content">
+                <h:outputStylesheet library="css" name="index.css"/>
+
+                <div class="indexContent">
+
+                    <!-- Jumbotron -->
+                    <div class="jumbotron jumbotronBuscarSucursales">
+
+                        <div class="container">
+                            <div class="row">
+
+                                <!-- Leyenda -->
+                                <div class="col-md-8">
+                                    <h1 class="labelTexto">Consultá los precios de las sucursales mas cercanas!<br/>
+                                    </h1>
+                                </div>
+
+                                <!-- Formulario -->
+                                <div class="col-md-4">
+                                    <h:form class="formBuscarSucursal">
+                                        <div class="form-group">
+                                            <h:outputLabel for="selectProvincia">Elegi tu provincia</h:outputLabel>
+                                            <h:selectOneMenu class="form-control" id="selectProvincia"
+                                                             value="#{indexBean.provincia}"
+                                                             tabindex="1"
+                                                             converter="#{provinciaConverter}">
+                                                <f:selectItems value="#{indexBean.provincias}" var="p"
+                                                               itemValue="#{p}"
+                                                               itemLabel="#{p.nombre}"/>
+                                                <f:ajax event="change" listener="#{indexBean.cargarCiudades}"
+                                                        render="selectCiudad"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="selectCiudad">Elegi tu ciudad</label>
+                                            <h:selectOneMenu class="form-control" id="selectCiudad" value="#{indexBean.ciudad}"
+                                                             tabindex="2">
+                                                <f:selectItems value="#{indexBean.ciudades}" var="c"
+                                                               itemValue="#{c}"
+                                                               itemLabel="#{c.nombre}"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="form-group">
+                                            <h:outputLabel for="inputDireccion">Escribi tu dirección</h:outputLabel>
+                                            <h:inputText class="form-control" id="inputDireccion"
+                                                         p:placeHolder="ej: Av. 25 de Mayo 1700"
+                                                         value=""
+                                                         tabindex="3"/>
+                                        </div>
+                                        <h:commandButton class="btn btn-default btn-block btn-primary" value="Buscar"
+                                                         tabindex="4"/>
+                                    </h:form>
+                                </div>
+                                <!-- Fin formulario -->
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Fin jumbotron -->
+
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</f:view>
+</html>

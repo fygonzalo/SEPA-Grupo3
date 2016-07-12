@@ -1,0 +1,224 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+    <!-- Indicamos la utilizacion de la plantillaGeneral -->
+    <ui:composition template="/plantillaGeneral.xhtml">
+
+        <!-- Definimos el titulo -->
+        <ui:define name="titulo">
+            Panel de administracion
+        </ui:define>
+
+        <!-- Seteamos las hojas de estilo -->
+        <ui:define name="cssGeneral">
+            <h:outputStylesheet library="css" name="admin/admin.css"/>
+        </ui:define>
+
+        <!-- Cargamos el header -->
+        <ui:define name="headerGeneral">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Panel administracion</h4>
+                </div>
+            </div>
+        </ui:define>
+
+        <!-- Cargamos el contenido general con el listado de sucursales -->
+        <ui:define name="contenidoGeneral">
+            <div class="row">
+
+                <!-- Menu de filtro -->
+                <div class="col-md-3">
+                    <h:form>
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Filtros
+                            </div>
+                            <!-- List group -->
+                            <ul class="list-group">
+
+                                <li class="list-group-item">
+                                    <h:inputText id="inputCuit" p:placeholder="20-38377682-2"
+                                                 class="form-control input-sm"/>
+                                </li>
+                                <li class="list-group-item">
+                                    <h:selectOneMenu id="selectProvincia" class="form-control input-sm">
+                                        <f:selectItem itemLabel="Todas las provincias"/>
+                                    </h:selectOneMenu>
+                                    <h:selectOneMenu id="selectCiudad" class="form-control input-sm">
+                                        <f:selectItem itemLabel="Todas las ciudades"/>
+                                    </h:selectOneMenu>
+                                </li>
+                                <li class="list-group-item">
+                                    <h:inputText id="inputDireccion" p:placeholder="Direccion..."
+                                                 class="form-control input-sm"/>
+                                </li>
+                                <li class="list-group-item">
+                                    <h:selectBooleanCheckbox id="checkboxHabilitados"/>Habilitados
+                                    <br/>
+                                    <h:selectBooleanCheckbox id="checkboxDeshabilitados"/>Deshabilitados
+                                </li>
+                                <li class="list-group-item">
+                                    <h:selectBooleanCheckbox id="checkboxDenunciados"/>Denunciados
+                                </li>
+                                <li class="list-group-item">
+                                    <h:commandButton class="btn btn-primary btn-block btn-sm" value="Actualizar"/>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </h:form>
+                </div>
+
+                <!-- Contenido central -->
+                <div class="col-md-9">
+
+                    <!-- Ordenamiento -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">
+                                <h:selectOneMenu id="selectOrden" class="form-control">
+                                    <f:selectItem itemLabel="Mayor cantidad de denuncias"/>
+                                    <f:selectItem itemLabel="Menor cantidad de denuncias"/>
+                                    <f:selectItem itemLabel="Mas nuevos"/>
+                                    <f:selectItem itemLabel="Mas antiguos"/>
+                                    <f:selectItem itemLabel="Mayor cantidad de sucursales"/>
+                                    <f:selectItem itemLabel="Menor cantidad de sucursales"/>
+                                </h:selectOneMenu>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <!-- Listado de comercios -->
+                    <div class="row">
+
+                        <!-- Comercio -->
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+
+                                <!-- Informacion principal del comercio, siempre se muestra -->
+                                <div class="panel-body">
+                                    <div class="media">
+                                        <div class="media-left media-middle">
+                                            <img class="media-object hidden-xs" src="#{resource['images/64x64.png']}"
+                                                 alt="nose"/>
+                                        </div>
+                                        <div class="media-body media-middle">
+                                            <h4 class="media-heading media-middle">
+                                                CUIT: 22-38377682-3<br/>
+                                                Nombre societario: APA SA.<br/>
+                                            </h4>
+                                        </div>
+                                        <div class="media-right media-middle">
+                                            Estado: <span class="label label-success">Habilitado</span><br/>
+                                            Total de denuncias: <span class="label label-danger">42</span><br/>
+                                            Cantidad de sucursales: <span class="label label-default">4</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Panel colapsable, contiene detalles y sucursales -->
+                                <div class="panel-collapse collapse" id="collapseComercio1">
+
+                                    <!-- Detalles del comercio -->
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="well">
+                                                    Direccion legal: dir<br/>
+                                                    Provincia: prov<br/>
+                                                    Ciudad: ciudad<br/>
+                                                    Telefono: 648418948<br/>
+                                                    Email: apa@apa.apa<br/>
+                                                    Fecha de ingreso: 19/12/2016
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <h:commandButton class="btn btn-danger btn-block" value="Deshabilitar"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tabla de sucursales -->
+                                    <table class="table text-center table-condensed table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Dirección</th>
+                                            <th>Provincia</th>
+                                            <th>Ciudad</th>
+                                            <th>Telefono</th>
+                                            <th>Email</th>
+                                            <th>Denuncias</th>
+                                            <th>Det.</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Av 25 de Mayo 568</td>
+                                            <td>Formosa</td>
+                                            <td>Formosa</td>
+                                            <td>3704-4269987</td>
+                                            <td>apita@apa.apa</td>
+                                            <td>
+                                                <span class="label label-danger">42</span>
+                                            </td>
+                                            <td>
+                                                <h:commandButton class="btn btn-sm btn-primary" value="IR" />
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Av 25 de Mayo 568</td>
+                                            <td>Formosa</td>
+                                            <td>Formosa</td>
+                                            <td>3704-4269987</td>
+                                            <td>apita@apa.apa</td>
+                                            <td>
+                                                <span class="label label-danger">42</span>
+                                            </td>
+                                            <td>
+                                                <h:commandButton class="btn btn-sm btn-primary" value="IR" />
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <!-- Footer del panel con el boton para el collapse -->
+                                <div class="panel-footer customFooter">
+                                    <div class="text-center">
+                                        <a role="button" data-toggle="collapse" href="#collapseComercio1"
+                                           aria-expanded="false" aria-controls="collapseComercio1">
+                                            <span class="glyphicon glyphicon-arrow-down"/>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Fin Comercio -->
+
+                    </div>
+
+                </div>
+
+            </div>
+        </ui:define>
+    </ui:composition>
+
+</h:body>
+</html>

@@ -1,0 +1,18 @@
+.commonContainerContent {
+    background-color: #FFF;
+    border-left: 1px solid #E4E4E4;
+    border-right: 1px solid #E4E4E4;
+    padding: 10px 0;
+    flex-grow: 1;
+}
+
+.commonContainerContent > * {
+    padding-bottom: 10px;
+}
+
+@media (min-width: 1200px)
+{
+    .commonContainerContent, .commonContainerContent .container {
+        width: 970px;
+    }
+}

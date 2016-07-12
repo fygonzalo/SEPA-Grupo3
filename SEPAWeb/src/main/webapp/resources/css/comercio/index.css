@@ -1,0 +1,5 @@
+/* Permite centrar verticalmente el contenido */
+.sucursalContainer {
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,36 @@
+.sucursalContainer {
+    border: 1px solid #E4E4E4;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+    padding: 10px;
+}
+
+.listaSucursales > * {
+    padding-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+    .pull-md-right {
+        float: right !important;
+    }
+
+    .formFiltro > div > * {
+        margin-left: 5px;
+    }
+}
+
+@media (max-width: 768px)
+{
+    .btn-xs-block {
+        display: block;
+        width: 100%;
+    }
+}
+
+.formFiltro {
+    padding: 7px 5px;
+}
+
+.form-group .forInput {
+    font-weight: normal;
+}

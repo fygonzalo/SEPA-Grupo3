@@ -1,0 +1,15 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F5;
+}
+
+.commonContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}

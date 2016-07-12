@@ -1,0 +1,12 @@
+.customFooter {
+    padding: 3px;
+    background-color: #F5F5F5;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.media-body {
+    width: 60%;
+}

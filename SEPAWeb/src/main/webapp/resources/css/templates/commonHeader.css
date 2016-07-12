@@ -1,0 +1,37 @@
+.commonHeaderPanel {
+    background: url(#{resource['images/background1.jpg']}) no-repeat center center;
+    display: flex;
+    color: #FFF;
+}
+
+@media (min-width: 768px) {
+    .commonHeaderPanel {
+        min-height: 96px;
+        max-height: 96px;
+    }
+
+    .commonHeaderPanel > .container {
+        height: 96px;
+    }
+}
+
+@media (min-width: 1200px)
+{
+    .commonHeaderPanel > .container {
+        width: 970px;
+    }
+}
+
+.commonHeaderContent {
+    display:flex;
+    height: inherit;
+    align-items: center;
+}
+
+.commonHeaderContent > .row {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+

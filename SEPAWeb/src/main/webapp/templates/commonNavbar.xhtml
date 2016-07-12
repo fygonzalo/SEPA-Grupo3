@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+<f:view>
+    <h:head>
+        <h:outputStylesheet library="css" name="/templates/commonNavbar.css"/>
+    </h:head>
+    <h:body>
+
+        <!-- Creacion de navbar -->
+        <nav class="navbar navbar-default navbarMenu">
+            <div class="container">
+
+                <!-- Definicion del icono y boton para expandir en moviles -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <h:link class="navbar-brand" outcome="/index.xhtml" value="SEPA"/>
+                </div>
+
+                <!-- Agrupa los links del menu desplegable en moviles -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="navMenu navbar-nav navbar-right">
+                        <li><a href="#">Descarga la app</a></li>
+                        <li>
+                            <h:link rendered="#{empty request.remoteUser}" value="Comercios" p:href="#loginModal" p:data-toggle="modal" class="hidden-xs"/>
+                        </li>
+                        <li><h:link value="Ayuda" outcome="/ayuda.xhtml"/></li>
+                        <h:panelGroup rendered="#{not empty request.remoteUser}">
+                            <li><h:link value="Admin panel" rendered="#{request.isUserInRole('COMERCIO')}" outcome="/comercio/index.xhtml" /></li>
+                            <li><h:link value="Admin panel" rendered="#{request.isUserInRole('ADMINISTRADOR')}" outcome="/admin/index.xhtml" /></li>
+                            <li><h:form><h:commandLink action="#{authBean.logout()}" value="Cerrar sesion" /></h:form></li>
+                        </h:panelGroup>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <!-- Fin de navbar -->
+
+        <!-- Modal para ingresar -->
+        <div id="loginModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="col-md-push-2 col-md-8">
+                    <div class="modal-content text-center">
+
+                        <!-- Contenido de modal -->
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3 class="modal-title">Ingresar a mi cuenta</h3>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="j_security_check">
+                                <input type="text" placeholder="Usuario" class="form-control" name="j_username"/><p/>
+                                <input type="password" placeholder="Contrasenia" class="form-control" name="j_password"/><p/>
+                                <input type="submit" class="btn btn-default btn-block btn-primary" value="Ingresar"/>
+                            </form>
+                        </div>
+                        <div class="modal-footer text-center">
+
+                            Queres incluir tu comercio? <a href="#registroModal" data-toggle="modal"
+                                                           data-dismiss="modal">Registrate!</a>
+
+                        </div>
+                        <!-- Fin contenido de modal -->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fin de modal para ingresar -->
+
+        <!-- Modal para registro -->
+        <div id="registroModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="col-md-push-2 col-md-8">
+
+                    <!-- Contenido de modal -->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3>Registrate</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h:form id="registroComercio">
+                                <h:inputText class="form-control" id="inputCuit"
+                                             p:placeHolder="Cuit (Ej: 20-12.345.698-7)"
+                                             value="#{registroComercioBean.comercio.cuit}">
+                                    <f:validateBean disabled="false"/>
+                                </h:inputText>
+                                <h:message for="inputCuit" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputNombreSoc"
+                                             p:placeHolder="Nombre societario (Ej:Apa SA)"
+                                             value="#{registroComercioBean.comercio.nombre}">
+                                    <f:validateBean disabled="false"/>
+                                </h:inputText>
+                                <h:message for="inputNombreSoc" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputEmail"
+                                             p:placeHolder="E-Mail (Ej: ApaSoc@hotmail.com)"
+                                             value="#{registroComercioBean.comercio.email}">
+                                    <f:validateBean disabled="false"/>
+                                </h:inputText>
+                                <h:message for="inputEmail" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputTelefono"
+                                             p:placeHolder="Telefono (Ej: 362-4203945)"
+                                             value="#{registroComercioBean.comercio.telefono}">
+                                    <f:validateBean disabled="false"/>
+                                </h:inputText>
+                                <h:message for="inputTelefono" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputProvincia"
+                                             p:placeHolder="Provincia"
+                                             value="#{registroComercioBean.sucursalUbicacion.provincia}">
+                                </h:inputText>
+                                <h:message for="inputProvincia" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputCiudad"
+                                             p:placeHolder="Ciudad"
+                                             value="#{registroComercioBean.sucursalUbicacion.ciudad}">
+                                </h:inputText>
+                                <h:message for="inputCiudad" class="text-danger"/>
+                                <p/>
+                                <h:inputText class="form-control" id="inputDireccion"
+                                             p:placeHolder="Direccion (Ej: Av 25 Mayo 1224)"
+                                             value="#{registroComercioBean.sucursalUbicacion.direccion}">
+                                </h:inputText>
+                                <h:message for="inputDireccion" class="text-danger"/>
+                                <p/>
+                                <h:commandButton class="btn btn-default btn-block btn-primary" value="Enviar"
+                                                 action="#{registroComercioBean.nuevoComercio}">
+                                    <f:ajax execute="@form" render="@form" />
+                                </h:commandButton>
+                            </h:form>
+
+                        </div>
+                        <div class="modal-footer text-center">
+                            Ya tienes cuenta? <a href="#loginModal" data-toggle="modal"
+                                                 data-dismiss="modal">Ingresa!</a>
+                        </div>
+                    </div>
+                    <!-- Fin contenido de modal -->
+
+                </div>
+            </div>
+        </div>
+        <!-- Fin de modal para registrar comercios -->
+
+    </h:body>
+
+</f:view>
+</html>

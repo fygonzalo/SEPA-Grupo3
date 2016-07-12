@@ -20,15 +20,33 @@ Primero se debe copiar el conector JDBC, en este caso de Mysql, a la carpeta 			
 
 ### Definicion de los parametros de seguridad
 1. En la consola de Payara ir a Configurations/server-config/Security y activar el checkbox "Default Principal To Role Mapping"
-2. Despues entrar a Realms y crear uno nuevo con el JAAS Context: "jdbcRealm", JNDI: "jdbc/SEPA", user table: "usuario", user name column: "username", password column: "password", group table: "rolusuario", group name column: "rol", password encryption algorithm: "none" (o algun algoritmo hash), y definir los datos de conexion a la BD en database user y database password.
+2. Despues entrar a Realms y crear uno nuevo con:  
+	  JAAS Context: "jdbcRealm"  
+      JNDI: "jdbc/SEPA"  
+      user table: "usuario"  
+      user name column: "username"  
+      password column: "password"  
+      group table: "rolusuario"  
+      group name column: "rol"  
+      password encryption algorithm: "none" (o algun algoritmo hash)  
+      Definir los datos de conexion a la BD en database user y database password.
 
 ### Configuracion de JavaMail Sessions
 1. En la consola ir a Resources/JavaMail Sessions y crear una nueva bajo el nombre de mail/SEPAEmail.
-2. Para utilizar el correo creado para el desarrollo configurar el mail host: "smtp.gmail.com", default user: "sepagrupo3@gmail.com", default sender address: "sepagrupo3@gmail.com" y agregar 4 parametros adicionales, mail.smtp.ssl.enable: "true", mail.smtp.port: "465", mail.smtp.auth: "true", mail.smtp.password: "sepatrabajo3"
+2. Para utilizar el correo creado para el desarrollo configurar:  
+	mail host: "smtp.gmail.com"
+    default user: "sepagrupo3@gmail.com"  
+    default sender address: "sepagrupo3@gmail.com"  
+    Agregar 4 parametros adicionales:  
+    mail.smtp.ssl.enable: "true"  
+    mail.smtp.port: "465"  
+    mail.smtp.auth: "true"  
+    mail.smtp.password: "sepatrabajo3"
 
 ### Importante
 Se debe crear una cuenta para el administrador de forma manual.  
-> USE [Database]  
-INSERT INTO usuario (username, password, email) VALUES ("[Usuario]", "[Contraseña]", "[Correo]")  
+> USE [Database];  
+INSERT INTO usuario (username, password, email) VALUES ("[Usuario]", "[Contraseña]", "[Correo]");  
 INSERT INTO rolusuario(username, rol) VALUES ("[Usuario]", "ADMINISTRADOR");
+
 
